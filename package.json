@@ -1,0 +1,22 @@
+{
+  "name": "vigila-cloud-surveillance",
+  "version": "1.0.0",
+  "description": "VIGILA - Enterprise Cloud Video Surveillance Platform & AWS Optimization Simulator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "cctv",
+    "video-surveillance",
+    "aws-optimization",
+    "motion-detection",
+    "vms"
+  ],
+  "author": "VIGILA Systems",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
+

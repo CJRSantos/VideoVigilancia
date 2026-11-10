@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIGILA - Enterprise Cloud Video Surveillance & SOC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="theme-dark">
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <svg class="radar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke="#3b82f6" stroke-opacity="0.3"></circle>
+          <circle cx="12" cy="12" r="6" stroke="#3b82f6" stroke-opacity="0.6"></circle>
+          <circle cx="12" cy="12" r="2" fill="#3b82f6"></circle>
+          <line x1="12" y1="2" x2="12" y2="12" stroke="#10b981" stroke-width="2" class="radar-sweep"></line>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-title">VIGILA<span class="accent-text">.CLOUD</span></span>
+          <span class="brand-subtitle">Enterprise Security Operations Center</span>
+        </div>
+      </div>
+      <div class="system-status-pill">
+        <span class="status-dot pulsing"></span>
+        <span id="system-status-text">SISTEMA ACTIVO | 6 CÁMARAS EN LÍNEA</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="tab-cameras">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 7l-7 5 7 5V7z"></path>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+        <span>Monitoreo en Vivo (SOC)</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-architecture">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+        </svg>
+        <span>Optimización AWS & Costos</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-incidents">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Incidencias & Evidencias</span>
+        <span class="badge-counter" id="incidents-badge">2</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-proposal">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Informe del Caso Práctico</span>
+      </button>
+    </nav>
+
+    <!-- Top Right Quick Info & Controls -->
+    <div class="user-controls">
+      <div class="live-clock" id="live-clock">2026-11-09 20:25:00 UTC-5</div>
+      
+      <!-- Professional IAM Identity & Role Selector -->
+      <div class="iam-profile-menu-wrap" id="iam-profile-menu-wrap">
+        <button class="iam-profile-trigger" id="iam-profile-trigger" title="Cambiar Rol de Usuario & Perfil IAM" type="button">
+          <div class="user-avatar" id="header-user-avatar">
+            <span class="user-initials" id="header-user-initials">SO</span>
+            <span class="user-online-pip"></span>
+          </div>
+          <div class="user-role-meta">
+            <span class="user-role-name" id="current-role-title">Operador CCTV (SOC)</span>
+            <span class="user-role-subtitle" id="current-role-subtitle">IAM: Monitoring-ReadOnly</span>
+          </div>
+          <svg class="chevron-down-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="iam-dropdown-menu" id="iam-dropdown-menu">
+          <div class="iam-menu-header">
+            <span class="iam-menu-label">PERFIL DE SEGURIDAD & ROLES IAM</span>
+            <span class="iam-aws-account">AWS: 1842-9901-4421 [us-east-1]</span>
+          </div>
+
+          <div class="iam-role-option active" data-role="OPERATOR" id="role-opt-operator">
+            <div class="role-icon-box role-operator">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 7l-7 5 7 5V7z"></path>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+              </svg>
+            </div>
+            <div class="role-details">
+              <div class="role-title-row">
+                <strong class="role-title">Operador CCTV (SOC)</strong>
+                <span class="role-tag tag-active" id="badge-role-OPERATOR">ACTIVO</span>
+              </div>
+              <p class="role-description">Monitoreo en tiempo real, control PTZ, atención de alertas y capturas forenses.</p>
+            </div>
+          </div>
+
+          <div class="iam-role-option" data-role="ADMIN" id="role-opt-admin">
+            <div class="role-icon-box role-admin">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div class="role-details">
+              <div class="role-title-row">
+                <strong class="role-title">Admin Cloud (DevSecOps)</strong>
+                <span class="role-tag" id="badge-role-ADMIN">IAM FULL</span>
+              </div>
+              <p class="role-description">Control de instancias EC2, escalado RDS Aurora, reglas de ciclo de vida S3 y SSM.</p>
+            </div>
+          </div>
+
+          <div class="iam-role-option" data-role="AUDITOR" id="role-opt-auditor">
+            <div class="role-icon-box role-auditor">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <div class="role-details">
+              <div class="role-title-row">
+                <strong class="role-title">Auditor Forense & Legal</strong>
+                <span class="role-tag" id="badge-role-AUDITOR">CUMPLIMIENTO</span>
+              </div>
+              <p class="role-description">Inspección de cadena de custodia, hash SHA-256 inmutable y emisión de informes PDF.</p>
+            </div>
+          </div>
+
+          <div class="iam-menu-footer">
+            <div class="mfa-badge">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Autenticación Multifactor (MFA) & AWS SSO Activo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-fullscreen" class="icon-btn" title="Pantalla Completa">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+          </path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: LIVE CAMERAS GRID (SOC MONITORING) -->
+    <!-- ========================================== -->
+    <section id="tab-cameras" class="tab-panel active">
+      <!-- CCTV Toolbar -->
+      <div class="cctv-toolbar">
+        <div class="toolbar-left">
+          <div class="layout-controls">
+            <span class="control-label">Malla de Video:</span>
+            <button class="btn-layout" data-layout="grid-1" title="Vista Individual 1x1">1x1</button>
+            <button class="btn-layout" data-layout="grid-4" title="Vista Cuádruple 2x2">2x2</button>
+            <button class="btn-layout active" data-layout="grid-6" title="Vista Matriz 6 Cámaras (3x2)">6 CAMS</button>
+          </div>
+
+          <div class="divider-vertical"></div>
+
+          <button id="btn-open-upload-modal" class="btn-action pulse-highlight"
+            title="Subir o cargar un video desde tu equipo local">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Subir Video Local a Cámara...</span>
+          </button>
+
+          <button id="btn-toggle-webcam" class="btn-action" title="Activar cámara web en vivo">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 7l-7 5 7 5V7z"></path>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+            <span>Conectar Mi Cámara Web (Cam 01)</span>
+          </button>
+
+          <button id="btn-trigger-alarm-test" class="btn-action btn-danger-outline"
+            title="Simular Detección de Intruso y Disparar Alarma">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>Simular Intrusión</span>
+          </button>
+        </div>
+
+        <div class="toolbar-right">
+          <div class="codec-pill">
+            <span class="codec-tag">HEVC / H.265</span>
+            <span class="codec-desc">Ahorro 50% Ancho de Banda</span>
+          </div>
+          <div class="stream-stats">
+            <span>BITRATE TOTAL: <strong>14.9 Mbps</strong></span>
+            <span>LATENCIA: <strong>64 ms</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Video Wall Layout -->
+      <div class="cctv-workspace">
+        <!-- Cameras Grid Container -->
+        <div class="cameras-grid grid-6" id="cameras-grid-container">
+
+          <!-- CAM 01: Operator / Entrance / Webcam -->
+          <div class="camera-card" id="card-cam-01" data-camera-id="CAM-01">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-01">CAM 01</span>
+                <span class="cam-name" id="name-cam-01">Acceso Principal & Entrada</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-01" title="Cargar video local a CAM-01">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-01" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-01">
+                <div class="cam-hud-stats">
+                  <span class="hud-item" id="cam1-fps">30 FPS</span>
+                  <span class="hud-item tier-hot">S3 Hot (7d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-01" data-camera-id="CAM-01">
+              <video id="video-stream-cam-01" class="cctv-video-stream" src="videos/cam1-entrance.mp4" autoplay loop
+                muted playsinline crossOrigin="anonymous"></video>
+              <video id="webcam-video-element" class="cctv-video-stream" autoplay playsinline muted
+                style="display:none;"></video>
+              <canvas id="canvas-cam-01" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-01">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-01</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-01">ACCESO PEATONAL NORTE</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-01">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 1080p | AES-256</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-01" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-01" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir" data-cam="CAM-01" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-01" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAM 02: Indoor Corridors -->
+          <div class="camera-card" id="card-cam-02" data-camera-id="CAM-02">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-02">CAM 02</span>
+                <span class="cam-name" id="name-cam-02">Centro de Cómputo & Pasillos</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-02" title="Cargar video local a CAM-02">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-02" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-02">
+                <div class="cam-hud-stats">
+                  <span class="hud-item">30 FPS</span>
+                  <span class="hud-item tier-hot">S3 Hot (7d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-02" data-camera-id="CAM-02">
+              <video id="video-stream-cam-02" class="cctv-video-stream" src="videos/cam2-indoor.mp4" autoplay loop muted
+                playsinline crossOrigin="anonymous"></video>
+              <canvas id="canvas-cam-02" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-02">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-02</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-02">PASILLO CENTRAL DATACENTER</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-02">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 1080p | AES-256</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-02" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-02" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir" data-cam="CAM-02" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-02" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAM 03: Lobby / Reception -->
+          <div class="camera-card" id="card-cam-03" data-camera-id="CAM-03">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-03">CAM 03</span>
+                <span class="cam-name" id="name-cam-03">Recepción & Galería Comercial</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-03" title="Cargar video local a CAM-03">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-03" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-03">
+                <div class="cam-hud-stats">
+                  <span class="hud-item">25 FPS</span>
+                  <span class="hud-item tier-hot">S3 Hot (7d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-03" data-camera-id="CAM-03">
+              <video id="video-stream-cam-03" class="cctv-video-stream" src="videos/cam3-lobby.mp4" autoplay loop muted
+                playsinline crossOrigin="anonymous"></video>
+              <canvas id="canvas-cam-03" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-03">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-03</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-03">ZONA COMERCIAL / LOBBY</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-03">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 4K UHD | AES-256</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-03" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-03" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir" data-cam="CAM-03" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-03" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAM 04: South Perimeter & Parking -->
+          <div class="camera-card" id="card-cam-04" data-camera-id="CAM-04">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-04">CAM 04</span>
+                <span class="cam-name" id="name-cam-04">Perímetro Sur & Tráfico Vehicular</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-04" title="Cargar video local a CAM-04">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-04" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-04">
+                <div class="cam-hud-stats">
+                  <span class="hud-item">25 FPS</span>
+                  <span class="hud-item tier-warm">S3 Warm (30d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-04" data-camera-id="CAM-04">
+              <video id="video-stream-cam-04" class="cctv-video-stream ir-filter" src="videos/cam4-parking.mp4" autoplay
+                loop muted playsinline crossOrigin="anonymous"></video>
+              <canvas id="canvas-cam-04" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-04">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-04</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-04">AUTOPISTA Y CONTROL VEHICULAR</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-04">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 1080p | AES-256</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-04" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-04" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir active" data-cam="CAM-04" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-04" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAM 05: High-Security Vault & Street Perimeter -->
+          <div class="camera-card" id="card-cam-05" data-camera-id="CAM-05">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-05">CAM 05</span>
+                <span class="cam-name" id="name-cam-05">Garita Externa & Control Perimetral</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-05" title="Cargar video local a CAM-05">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-05" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-05">
+                <div class="cam-hud-stats">
+                  <span class="hud-item">30 FPS</span>
+                  <span class="hud-item tier-cold">S3 Glacier (180d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-05" data-camera-id="CAM-05">
+              <video id="video-stream-cam-05" class="cctv-video-stream" src="videos/cam5-perimeter.mp4" autoplay loop
+                muted playsinline crossOrigin="anonymous"></video>
+              <canvas id="canvas-cam-05" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-05">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-05</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-05">GARITA PERIMETRAL EXTERIOR</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-05">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 1080p | CloudHSM</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-05" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-05" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir" data-cam="CAM-05" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-05" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAM 06: Loading Dock / Logistics -->
+          <div class="camera-card" id="card-cam-06" data-camera-id="CAM-06">
+            <div class="camera-header">
+              <div class="cam-info">
+                <span class="status-indicator live"></span>
+                <span class="cam-badge" id="badge-cam-06">CAM 06</span>
+                <span class="cam-name" id="name-cam-06">Muelle de Carga & Logística</span>
+              </div>
+              <div class="cam-header-actions">
+                <button class="btn-cam-upload" data-cam="CAM-06" title="Cargar video local a CAM-06">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Subir Video</span>
+                </button>
+                <input type="file" id="file-input-cam-06" class="camera-file-input" accept="video/*"
+                  style="display:none;" data-cam="CAM-06">
+                <div class="cam-hud-stats">
+                  <span class="hud-item">25 FPS</span>
+                  <span class="hud-item tier-warm">S3 Warm (30d)</span>
+                </div>
+              </div>
+            </div>
+            <div class="video-viewport" id="viewport-cam-06" data-camera-id="CAM-06">
+              <video id="video-stream-cam-06" class="cctv-video-stream" src="videos/cam6-logistics.mp4" autoplay loop
+                muted playsinline crossOrigin="anonymous"></video>
+              <canvas id="canvas-cam-06" class="camera-canvas-overlay" width="640" height="360"></canvas>
+
+              <div class="dropzone-indicator" id="dropzone-cam-06">
+                <div class="dropzone-box">
+                  <span class="dropzone-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </span>
+                  <strong>Suelta tu video local aquí</strong>
+                  <small>Carga instantánea en CAM-06</small>
+                </div>
+              </div>
+
+              <div class="camera-overlay-hud">
+                <div class="hud-top-left">
+                  <span class="live-rec-badge"><span class="rec-dot"></span>REC</span>
+                  <span class="cam-location-tag" id="loc-cam-06">LOGISTICS ALMACÉN GENERAL</span>
+                </div>
+                <div class="hud-top-right">
+                  <span class="cam-watermark-time" id="watermark-cam-06">2026-11-09 20:25:00.120</span>
+                </div>
+                <div class="hud-bottom-left">
+                  <span class="codec-indicator">H.265 1080p | AES-256</span>
+                </div>
+                <div class="hud-bottom-right">
+                  <button class="cam-tool-btn btn-change-video" data-cam="CAM-06" title="Cargar video local desde PC">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-snapshot" data-cam="CAM-06" title="Tomar Foto de Evidencia">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ir" data-cam="CAM-06" title="Visión Infrarroja / Nocturna">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  </button>
+                  <button class="cam-tool-btn btn-ptz-toggle" data-cam="CAM-06" title="Controles PTZ">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Side Panel: PTZ Controls & Fast Incidents -->
+        <aside class="cctv-side-panel">
+          <!-- PTZ Controller Widget -->
+          <div class="side-widget ptz-widget">
+            <div class="widget-header">
+              <h3>Control PTZ Digital</h3>
+              <span class="selected-cam-tag" id="ptz-active-cam">CAM-01</span>
+            </div>
+            <div class="ptz-pad-container">
+              <div class="ptz-pad">
+                <button class="ptz-btn ptz-up" data-ptz="up" title="Inclinación Arriba">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </button>
+                <div class="ptz-mid-row">
+                  <button class="ptz-btn ptz-left" data-ptz="left" title="Paneo Izquierda">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  </button>
+                  <button class="ptz-btn ptz-center" data-ptz="center" title="Centrar / Restablecer">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" fill="currentColor"></circle><circle cx="12" cy="12" r="8"></circle></svg>
+                  </button>
+                  <button class="ptz-btn ptz-right" data-ptz="right" title="Paneo Derecha">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </div>
+                <button class="ptz-btn ptz-down" data-ptz="down" title="Inclinación Abajo">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ptz-zoom-control">
+              <span class="zoom-label">Zoom Óptico/Digital:</span>
+              <div class="zoom-buttons">
+                <button class="btn-zoom" data-zoom="in" title="Acercar Zoom">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                  <span>Zoom +</span>
+                </button>
+                <span class="zoom-value" id="ptz-zoom-level">1.0x</span>
+                <button class="btn-zoom" data-zoom="out" title="Alejar Zoom">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                  <span>Zoom -</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Alarm Stream Widget -->
+          <div class="side-widget alarms-widget">
+            <div class="widget-header">
+              <h3>Alertas en Tiempo Real</h3>
+              <span class="live-pulse-badge">EN VIVO</span>
+            </div>
+            <div class="alarms-list" id="quick-alarms-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Storage Tier Overview Widget -->
+          <div class="side-widget storage-quick-widget">
+            <div class="widget-header">
+              <h3>Almacenamiento VIGILA</h3>
+              <span class="savings-tag">-70.7% Costo</span>
+            </div>
+            <div class="tier-bars">
+              <div class="tier-row">
+                <span class="tier-name">S3 Hot (1 a 7 días)</span>
+                <span class="tier-val">480 GB</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill hot" style="width: 25%"></div>
+              </div>
+
+              <div class="tier-row">
+                <span class="tier-name">S3 Standard-IA (8 a 30 días)</span>
+                <span class="tier-val">1,840 GB</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill warm" style="width: 45%"></div>
+              </div>
+
+              <div class="tier-row">
+                <span class="tier-name">S3 Glacier Deep (31+ días)</span>
+                <span class="tier-val">8,520 GB</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill cold" style="width: 85%"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: AWS ARCHITECTURE & COST OPTIMIZATION (CASE STUDY) -->
+    <!-- ======================================================== -->
+    <section id="tab-architecture" class="tab-panel">
+      <div class="arch-container">
+
+        <!-- Header Banner -->
+        <div class="arch-banner">
+          <div>
+            <h2>Arquitectura de Migración y Optimización AWS - Caso VIGILA</h2>
+            <p class="subtitle">Solución integral a los sobrecostos de EC2, cuello de botella de almacenamiento y
+              seguridad de streaming.</p>
+          </div>
+          <div class="savings-highlight-card">
+            <span class="savings-label">AHORRO MENSUAL ESTIMADO</span>
+            <span class="savings-amount">$7,598.00 USD / mes</span>
+            <span class="savings-subtext">Reducción del 70.7% en la factura de AWS</span>
+          </div>
+        </div>
+
+        <!-- 3-Way Grid: Cost Comparison, Architecture Diagram, Storage Lifecycle -->
+        <div class="arch-grid-top">
+
+          <!-- Cost Comparison Card -->
+          <div class="arch-card">
+            <div class="card-header">
+              <span class="card-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </span>
+              <h3>Comparativa Económica: Antes vs Después</h3>
+            </div>
+            <div class="cost-comparison-table-wrap">
+              <table class="cost-table">
+                <thead>
+                  <tr>
+                    <th>Componente</th>
+                    <th>Antes (No Optimizado)</th>
+                    <th>Propuesta VIGILA (Optimizada)</th>
+                    <th>Estrategia Aplicada</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Cómputo (Transcodificación)</strong></td>
+                    <td class="cost-high">$2,448.00 / mes<br><small>20x EC2 c5.2xlarge 24/7</small></td>
+                    <td class="cost-low">$734.00 / mes<br><small>AWS Lambda + EC2 Spot Auto-scaling</small></td>
+                    <td><span class="strategy-badge">Spot + Serverless</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Almacenamiento de Video</strong></td>
+                    <td class="cost-high">$5,200.00 / mes<br><small>Discos EBS gp3 estáticos para todo el video</small>
+                    </td>
+                    <td class="cost-low">$1,616.00 / mes<br><small>S3 Intelligent-Tiering + Glacier Deep Archive</small>
+                    </td>
+                    <td><span class="strategy-badge">S3 Lifecycle Policies</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Transferencia de Red (Egress)</strong></td>
+                    <td class="cost-high">$3,100.00 / mes<br><small>Streaming H.264 directo sin caché</small></td>
+                    <td class="cost-low">$800.00 / mes<br><small>Códec H.265 + Amazon CloudFront CDN</small></td>
+                    <td><span class="strategy-badge">H.265 + CloudFront</span></td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>TOTAL MENSUAL</strong></td>
+                    <td class="cost-high"><strong>$10,748.00 USD</strong></td>
+                    <td class="cost-low"><strong>$3,150.00 USD</strong></td>
+                    <td><strong class="highlight-green">Ahorro: $7,598 (70.7%)</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Dynamic Calculator -->
+            <div class="cost-interactive-slider">
+              <div class="slider-header">
+                <label for="cam-count-slider"><strong>Simulador Dinámico de Cámaras Conectadas:</strong></label>
+                <span id="cam-count-display" class="slider-cam-val">50 Cámaras</span>
+              </div>
+              <input type="range" id="cam-count-slider" min="10" max="500" step="10" value="50">
+              <div class="slider-results">
+                <div>Costo Sin Optimizar: <span id="calc-unopt" class="cost-high">$5,374 / mes</span></div>
+                <div>Costo Propuesto VIGILA: <span id="calc-opt" class="cost-low">$1,575 / mes</span></div>
+                <div>Ahorro Anual: <strong id="calc-savings" class="highlight-green">$45,588 / año</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Storage Lifecycle Visualizer -->
+          <div class="arch-card">
+            <div class="card-header">
+              <span class="card-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+              </span>
+              <h3>Pirámide de Ciclo de Vida de Almacenamiento</h3>
+            </div>
+            <div class="lifecycle-pipeline">
+              <div class="pipeline-step step-hot">
+                <div class="step-badge">Día 1 - 7</div>
+                <div class="step-title">Amazon S3 Standard</div>
+                <p>Grabaciones activas, analítica de IA en tiempo real y streaming instantáneo para operadores SOC.</p>
+                <div class="step-cost">Costo: $0.023 / GB</div>
+              </div>
+              <div class="pipeline-arrow">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <span>Política de Transición a los 7 Días</span>
+              </div>
+              <div class="pipeline-step step-warm">
+                <div class="step-badge">Día 8 - 30</div>
+                <div class="step-title">Amazon S3 Standard-IA (Infrequent Access)</div>
+                <p>Acceso rápido para investigaciones forenses de incidentes ocurridos en el último mes.</p>
+                <div class="step-cost">Costo: $0.0125 / GB (Ahorro ~45%)</div>
+              </div>
+              <div class="pipeline-arrow">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <span>Política de Transición a los 30 Días</span>
+              </div>
+              <div class="pipeline-step step-cold">
+                <div class="step-badge">Día 31 - 365+</div>
+                <div class="step-title">Amazon S3 Glacier Flexible / Deep Archive</div>
+                <p>Custodia legal obligatoria y auditoría a largo plazo. Recuperación en 3 a 5 horas.</p>
+                <div class="step-cost">Costo: $0.0036 / GB (Ahorro ~85%)</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Grid: Database (Aurora), Security (IAM), Systems Manager (SSM) -->
+        <div class="arch-grid-bottom">
+
+          <!-- Aurora DB Optimization -->
+          <div class="arch-card">
+            <div class="card-header">
+              <span class="card-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+              </span>
+              <h3>Amazon Aurora PostgreSQL (BBDD Optimizada)</h3>
+            </div>
+            <ul class="feature-checklist">
+              <li><strong>Separación de Responsabilidades:</strong> Metadatos, eventos y bitácoras en Aurora; el video
+                crudo se almacena en S3 (nunca en BD).</li>
+              <li><strong>Multi-AZ & Auto-Failover:</strong> Réplicas de lectura (Read Replicas) dedicadas para el
+                tablero de monitoreo sin saturar el nodo primario de escritura.</li>
+              <li><strong>Particionamiento Mensual de Tablas:</strong> Índices optimizados sobre marcas temporales y IDs
+                de cámara para búsquedas forenses sub-segundo.</li>
+              <li><strong>Connection Pooling con AWS RDS Proxy:</strong> Absorbe picos de conexiones de miles de cámaras
+                sin degradar el motor relacional.</li>
+            </ul>
+          </div>
+
+          <!-- Security & IAM Strategy -->
+          <div class="arch-card">
+            <div class="card-header">
+              <span class="card-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </span>
+              <h3>Estrategia de Seguridad Integral (IAM & Cifrado)</h3>
+            </div>
+            <ul class="feature-checklist">
+              <li><strong>Principio de Menor Privilegio (Least Privilege):</strong> Políticas IAM estrictas separadas
+                por roles (Administrador, Operador, Auditor).</li>
+              <li><strong>Cifrado de Extremo a Extremo:</strong> TLS 1.3 en tránsito con certificados ACM y cifrado en
+                reposo con AWS KMS (claves rotadas anualmente).</li>
+              <li><strong>Segmentación de Red (VPC):</strong> Cámaras y workers en Subnets Privadas sin IP pública;
+                salida a S3 mediante <em>VPC Endpoints (Gateway)</em> sin costo de NAT.</li>
+              <li><strong>AWS WAF & Shield:</strong> Protección perimetral contra ataques de denegación de servicio
+                (DDoS) e inyecciones HTTP.</li>
+            </ul>
+          </div>
+
+          <!-- AWS Systems Manager Automation -->
+          <div class="arch-card">
+            <div class="card-header">
+              <span class="card-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              </span>
+              <h3>AWS Systems Manager (Automatización & Mantenimiento)</h3>
+            </div>
+            <div class="ssm-console-preview">
+              <div class="ssm-toolbar">
+                <span class="ssm-title">Automatizaciones Activas</span>
+                <button id="btn-run-ssm-task" class="btn-action btn-sm">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Ejecutar Mantenimiento</span>
+                </button>
+              </div>
+              <div class="ssm-logs" id="ssm-logs-container">
+                <!-- Dynamically loaded -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 3: INCIDENTS & FORENSIC EVIDENCE LOG       -->
+    <!-- ============================================== -->
+    <section id="tab-incidents" class="tab-panel">
+      <div class="incidents-container">
+        <div class="section-top-bar">
+          <div>
+            <h2>Bitácora de Incidencias & Bóveda de Evidencias</h2>
+            <p class="subtitle">Registro inmutable de alertas generadas por visión computacional, accesos y capturas
+              forenses.</p>
+          </div>
+          <div class="top-bar-actions">
+            <button id="btn-export-report" class="btn-action btn-report-primary" title="Generar Informe Oficial de Incidentes para Imprimir o Guardar en PDF">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7"></path>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Generar Informe Formal en PDF / Imprimir</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="incidents-layout">
+          <!-- Incidents Table -->
+          <div class="incidents-table-card">
+            <div class="table-filters">
+              <input type="text" id="incidents-search" placeholder="Buscar por cámara, evento o severidad..."
+                class="search-input">
+              <select id="severity-filter" class="filter-select">
+                <option value="ALL">Todas las Severidades</option>
+                <option value="HIGH">Alta (Crítica)</option>
+                <option value="MEDIUM">Media</option>
+                <option value="LOW">Baja</option>
+              </select>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="min-width: 90px;">ID</th>
+                    <th style="min-width: 105px;">Hora / Fecha</th>
+                    <th style="min-width: 130px;">Cámara</th>
+                    <th>Tipo de Evento & Descripción</th>
+                    <th style="min-width: 95px;">Confianza</th>
+                    <th style="min-width: 90px;">Severidad</th>
+                    <th style="min-width: 105px;">Estado</th>
+                    <th style="min-width: 95px;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="incidents-table-body">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Evidence Locker Grid -->
+          <div class="evidence-locker-card">
+            <div class="card-header">
+              <div class="evidence-header-left">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#3b82f6" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <h3>Bóveda de Evidencias (Snapshots)</h3>
+              </div>
+              <span class="evidence-counter" id="evidence-count">0 Capturas</span>
+            </div>
+            <div class="evidence-gallery" id="evidence-gallery">
+              <div class="empty-state" id="empty-evidence-msg">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#60a5fa" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <strong>Bóveda Criptográfica Vacía</strong>
+                <small>Presiona el botón de cámara forense en cualquier transmisión para capturar evidencia con marca de agua inmutable y hash SHA-256.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================= -->
+    <!-- TAB 4: ACADEMIC CASE STUDY PROPOSAL (FOR TEACHER) -->
+    <!-- ================================================= -->
+    <section id="tab-proposal" class="tab-panel">
+      <div class="proposal-container">
+        <div class="proposal-doc-paper">
+
+          <div class="doc-header">
+            <div class="doc-brand">
+              <h1>PROPUESTA TÉCNICA Y ARQUITECTÓNICA</h1>
+              <h2>Optimización de Infraestructura en la Nube y Plataforma de Videovigilancia - Caso VIGILA</h2>
+            </div>
+            <div class="doc-meta">
+              <div><strong>Institución:</strong> Proyecto Práctico de Arquitectura Cloud</div>
+              <div><strong>Empresa:</strong> VIGILA Soluciones de Videovigilancia</div>
+              <div><strong>Fecha de Presentación:</strong> Noviembre 2026</div>
+              <div><strong>Estado:</strong> Aprobado para Implementación</div>
+            </div>
+          </div>
+
+          <hr class="doc-divider">
+
+          <article class="doc-body">
+
+            <section class="doc-section">
+              <h3>1. Diagnóstico de la Infraestructura Actual y Puntos Críticos</h3>
+              <p>Durante la auditoría inicial de la migración de VIGILA hacia Amazon Web Services (AWS), se
+                identificaron cuatro cuellos de botella fundamentales que comprometen la viabilidad financiera y
+                operacional:</p>
+              <ul>
+                <li><strong>Sobrecosto por Instancias EC2 Fijas (24/7):</strong> Se desplegaron instancias
+                  <code>c5.2xlarge</code> de forma estática para decodificar, transcodificar y procesar video
+                  ininterrumpidamente, aun cuando más del 70% del tiempo no existe movimiento relevante en las escenas
+                  monitoreadas.</li>
+                <li><strong>Almacenamiento No Jerarquizado en Discos EBS:</strong> Todo el metraje de video se guarda
+                  directamente en volúmenes EBS gp3 de alto costo por gigabyte, acumulando terabytes de datos que rara
+                  vez se consultan después de 7 días.</li>
+                <li><strong>Inseguridad y Exposición de Credenciales:</strong> Falta de segmentación de red VPC (cámaras
+                  con asignación innecesaria de IP pública), ausencia de roles IAM restrictivos y claves de acceso
+                  compartidas.</li>
+                <li><strong>Base de Datos No Escalable:</strong> La base de datos relacional almacenaba fragmentos
+                  binarios de video y metadatos en la misma instancia sin separación de lectura/escritura ni índices
+                  temporales.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section">
+              <h3>2. Propuesta de Optimización de Cómputo (EC2, Spot & Serverless)</h3>
+              <div class="proposal-grid-2">
+                <div class="proposal-box">
+                  <h4>Arquitectura de Cómputo Híbrida</h4>
+                  <p>En lugar de instancias dedicadas 24/7, se adopta un modelo guiado por eventos:</p>
+                  <ul>
+                    <li><strong>Procesamiento en el Borde / Edge:</strong> Las cámaras o agentes de borde ejecutan
+                      detección de movimiento liviana. Solo cuando se detecta actividad se transmite el flujo de alta
+                      resolución.</li>
+                    <li><strong>AWS Lambda & Kinesis Video Streams:</strong> Disparo de funciones sin servidor para
+                      segmentar y etiquetar video bajo demanda sin pagar por servidores inactivos.</li>
+                    <li><strong>EC2 Spot Instances con Auto-Scaling:</strong> Para tareas de transcodificación masiva o
+                      archivo por lotes nocturno, se utilizan instancias Spot con un ahorro del <strong>70% al
+                        90%</strong> respecto a precios bajo demanda.</li>
+                  </ul>
+                </div>
+                <div class="proposal-box">
+                  <h4>Optimización de Códec de Video (H.265)</h4>
+                  <p>Migración del protocolo heredado H.264 al estándar <strong>H.265 / HEVC</strong>. Esto reduce el
+                    consumo de ancho de banda y almacenamiento en un <strong>50%</strong> sin perder fidelidad visual ni
+                    precisión en analíticas forenses.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="doc-section">
+              <h3>3. Estrategia de Almacenamiento Jerárquico (S3, EBS y Glacier)</h3>
+              <p>Se diseñó una política de ciclo de vida (Lifecycle Rule) automatizada en Amazon S3:</p>
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Capa de Almacenamiento</th>
+                    <th>Período de Retención</th>
+                    <th>Uso / Propósito</th>
+                    <th>Costo Aprox. / GB-mes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Amazon S3 Standard (Hot)</strong></td>
+                    <td>Día 1 al 7</td>
+                    <td>Monitoreo en tiempo real, alarmas inmediatas y analítica de IA.</td>
+                    <td>$0.023</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon S3 Standard-IA (Warm)</strong></td>
+                    <td>Día 8 al 30</td>
+                    <td>Investigación de incidencias recientes y auditoría mensual.</td>
+                    <td>$0.0125 (Ahorro ~45%)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon S3 Glacier Flexible (Cold)</strong></td>
+                    <td>Día 31 al 180</td>
+                    <td>Cumplimiento legal y retención judicial estándar.</td>
+                    <td>$0.0036 (Ahorro ~84%)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon S3 Glacier Deep Archive</strong></td>
+                    <td>Día 181 al 365+</td>
+                    <td>Preservación de seguridad histórica a largo plazo.</td>
+                    <td>$0.00099 (Ahorro ~95%)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="doc-section">
+              <h3>4. Base de Datos Optimizada en Amazon Aurora PostgreSQL</h3>
+              <p>Se desacopla por completo el almacenamiento de video del almacenamiento relacional de metadatos:</p>
+              <ul>
+                <li><strong>Arquitectura de Almacenamiento Desacoplado:</strong> El motor relacional almacena
+                  exclusivamente identificadores de cámara, marcas de tiempo, coordenadas GPS, tipo de evento detectado
+                  y URLs firmadas de S3. El video reside íntegramente en S3.</li>
+                <li><strong>Cluster Multi-AZ con Read Replicas:</strong> Escrituras rápidas en el nodo maestro y
+                  réplicas de lectura para las consultas masivas de los operadores SOC.</li>
+                <li><strong>Particionamiento de Tablas por Fecha:</strong> Particiones mensuales en PostgreSQL
+                  garantizan que las consultas de video histórico no escaneen tablas de millones de registros.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section">
+              <h3>5. Estrategia de Seguridad Integral (IAM, VPC, KMS)</h3>
+              <ul>
+                <li><strong>Políticas IAM de Mínimo Privilegio:</strong> Separación granular de roles (Operador SOC solo
+                  puede visualizar cámaras asignadas; Administrador de Infraestructura gestiona recursos; Auditor solo
+                  tiene acceso de lectura a bitácoras de CloudTrail).</li>
+                <li><strong>Cifrado Integral:</strong> Cifrado en tránsito forzado con TLS 1.3 y cifrado en reposo
+                  obligatorio en S3 y Aurora mediante claves maestras administradas por <strong>AWS KMS (Key Management
+                    Service)</strong> con rotación anual.</li>
+                <li><strong>VPC Privada y Endpoints de Gateway:</strong> Todo el tráfico de video viaja dentro de la red
+                  privada de AWS sin tocar internet público mediante VPC Endpoints hacia Amazon S3.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section">
+              <h3>6. Automatización Operativa con AWS Systems Manager (SSM)</h3>
+              <p>Implementación de agentes SSM en todas las instancias y dispositivos perimetrales para eliminar el
+                acceso SSH manual:</p>
+              <ul>
+                <li><strong>Patch Manager:</strong> Despliegue automatizado de actualizaciones de seguridad del sistema
+                  operativo y firmwares de cámaras durante ventanas de mantenimiento programadas.</li>
+                <li><strong>Run Command:</strong> Ejecución remota y simultánea de diagnósticos de red y verificaciones
+                  de cumplimiento de seguridad en cientos de cámaras a la vez.</li>
+                <li><strong>Session Manager:</strong> Auditoría completa y grabación de sesiones de los ingenieros de
+                  soporte sin necesidad de abrir puertos 22 o bastiones públicos.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section">
+              <h3>7. Resumen de Beneficios y Ahorro Económico Cuantificado</h3>
+              <div class="summary-results-grid">
+                <div class="result-metric">
+                  <div class="metric-num">-70.7%</div>
+                  <div class="metric-title">Reducción de Costos de Factura Cloud</div>
+                  <div class="metric-desc">De $10,748 USD a $3,150 USD mensuales en la flota base de monitoreo.</div>
+                </div>
+                <div class="result-metric">
+                  <div class="metric-num">99.98%</div>
+                  <div class="metric-title">Disponibilidad del Sistema (SLA)</div>
+                  <div class="metric-desc">Arquitectura Multi-AZ resiliente ante fallas de hardware en zonas de
+                    disponibilidad.</div>
+                </div>
+                <div class="result-metric">
+                  <div class="metric-num">50%</div>
+                  <div class="metric-title">Optimización de Ancho de Banda</div>
+                  <div class="metric-desc">Implementación del estándar H.265/HEVC y compresión adaptativa por
+                    movimiento.</div>
+                </div>
+              </div>
+            </section>
+
+          </article>
+
+          <div class="doc-footer">
+            <button onclick="window.print()" class="btn-action">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Imprimir / Guardar este Informe como PDF</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Audio Alert Chime (Web Audio API Synthesizer) -->
+  <audio id="alarm-sound-synthetic" preload="auto"></audio>
+
+  <!-- Upload / Video Source Modal -->
+  <div id="upload-video-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+          <h3>Cargar Video Local / Fuente de Vigilancia</h3>
+        </div>
+        <button id="btn-close-upload-modal" class="modal-close" title="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label><strong>1. Selecciona la Cámara de Destino:</strong></label>
+          <select id="modal-target-cam" class="form-select">
+            <option value="CAM-01">CAM-01: Acceso Principal & Entrada</option>
+            <option value="CAM-02">CAM-02: Centro de Cómputo & Pasillos</option>
+            <option value="CAM-03">CAM-03: Recepción & Galería Comercial</option>
+            <option value="CAM-04">CAM-04: Perímetro Sur & Tráfico</option>
+            <option value="CAM-05">CAM-05: Garita Externa & Control Perimetral</option>
+            <option value="CAM-06">CAM-06: Muelle de Carga & Logística</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label><strong>2. Opción A: Subir un Video desde tu Computadora:</strong></label>
+          <div class="file-drop-area" id="modal-file-drop-area">
+            <input type="file" id="modal-video-file-input"
+              accept="video/mp4,video/webm,video/ogg,video/quicktime,video/x-matroska" class="file-input-hidden">
+            <div class="drop-area-prompt">
+              <span class="upload-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--accent-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 7l-7 5 7 5V7z"></path>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+              </span>
+              <span id="modal-file-selected-name">Haz clic para examinar archivos o arrastra tu video aquí</span>
+              <small>Soporta archivos MP4, WebM, MKV, AVI, MOV desde tu disco duro local</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>3. Opción B: O selecciona un Video de Vigilancia del Servidor:</strong></label>
+          <div class="preset-videos-grid" id="preset-videos-list">
+            <!-- Dynamically populated from /api/videos -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-modal" class="btn-action btn-danger-outline">Cancelar</button>
+        <button id="btn-apply-modal-video" class="btn-action">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>Cargar y Reproducir en Cámara</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- OFFICIAL FORENSIC INCIDENT AUDIT REPORT MODAL (PDF/PRINT) -->
+  <!-- ======================================================== -->
+  <div id="report-modal" class="modal-backdrop report-modal-backdrop" style="display:none;">
+    <div class="report-modal-dialog">
+      <!-- Modal Top Controls -->
+      <div class="report-modal-top-bar">
+        <div class="report-modal-title">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <strong>Vista Previa del Informe Oficial Forense (Listo para PDF / Imprimir)</strong>
+        </div>
+        <div class="report-modal-actions">
+          <button id="btn-print-modal-report" class="btn-action btn-print-highlight">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            <span>Imprimir / Guardar como PDF</span>
+          </button>
+          <button id="btn-download-report-html" class="btn-action btn-outline-light" title="Descargar como archivo HTML independiente">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Descargar HTML</span>
+          </button>
+          <button id="btn-close-report-modal" class="modal-close-btn" title="Cerrar">&times;</button>
+        </div>
+      </div>
+
+      <!-- Printable Report Sheet (Paper Format) -->
+      <div class="report-sheet-scroll" id="report-sheet-scroll">
+        <div class="report-sheet-paper" id="printable-report-content">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/camera-simulator.js"></script>
+  <script src="js/motion-detector.js"></script>
+  <script src="js/cost-calculator.js"></script>
+  <script src="js/ssm-simulator.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
